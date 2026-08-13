@@ -42,6 +42,16 @@ function odataString(value: string): string {
 }
 
 /**
+ * The siteUrl-or-current-site fallback the constructor below resolves to.
+ * Exported so callers that only need to *display* the resolved URL (e.g. the
+ * config-validation banner) don't have to duplicate this logic and risk it
+ * drifting out of sync.
+ */
+export function resolveConfiguredSiteUrl(config: IAppConfig, context: WebPartContext): string {
+  return config.siteUrl && config.siteUrl.trim() !== '' ? config.siteUrl.trim() : context.pageContext.web.absoluteUrl;
+}
+
+/**
  * Real SharePoint REST implementation, built on PnPjs v3 (@pnp/sp) scoped
  * to the SPFx context. Targets `config.siteUrl` when the Admin has set one
  * in Settings (the lists live in a different site than this web part), and
@@ -60,7 +70,7 @@ export class SharePointService implements ISharePointService {
   private webServerRelativeUrl: string;
 
   constructor(private context: WebPartContext, private config: IAppConfig) {
-    const targetUrl = config.siteUrl && config.siteUrl.trim() !== '' ? config.siteUrl.trim() : context.pageContext.web.absoluteUrl;
+    const targetUrl = resolveConfiguredSiteUrl(config, context);
     this.sp = spfi(targetUrl).using(SPFx(context as never));
     this.spCurrentSite = targetUrl === context.pageContext.web.absoluteUrl
       ? this.sp
@@ -357,5 +367,20 @@ export class SharePointService implements ISharePointService {
 
   public getListWebRelativeUrl(listName: string): string {
     return `${this.webServerRelativeUrl}/${listName}/AllItems.aspx`;
+  }
+
+  // ---- Dependency validation (drives the ConfigWarningBanner) -------------
+
+  public async checkListsExist(listTitles: string[]): Promise<string[]> {
+    const unique = Array.from(new Set(listTitles));
+    const results = await Promise.all(unique.map(async (title): Promise<string | undefined> => {
+      try {
+        await this.sp.web.lists.getByTitle(title).select('Id')();
+        return undefined;
+      } catch {
+        return title; // 404 (or no access) — treat as "not provisioned" either way
+      }
+    }));
+    return results.filter((title): title is string => title !== undefined);
   }
 }

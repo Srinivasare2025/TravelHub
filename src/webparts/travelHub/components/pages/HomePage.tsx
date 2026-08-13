@@ -33,6 +33,14 @@ export const HomePage: React.FC = () => {
       setNews(newsItems);
       setQuickLinks(links);
       setNotifications(notifs);
+    }).catch(() => {
+      // A list not being provisioned yet surfaces via ConfigWarningBanner (see Layout) —
+      // here we just fail soft to empty sections instead of an unhandled rejection.
+      if (cancelled) return;
+      setPromotions([]);
+      setNews([]);
+      setQuickLinks([]);
+      setNotifications([]);
     }).finally(() => { if (!cancelled) setLoading(false); });
     service.logEvent('PageView', '/home').catch(() => { /* non-fatal */ });
     return () => { cancelled = true; };

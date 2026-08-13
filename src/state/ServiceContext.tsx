@@ -2,14 +2,17 @@ import * as React from 'react';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { ISharePointService } from '../services/ISharePointService';
 import { ConfigService } from '../services/ConfigService';
-import { createSharePointService, createConfigService } from '../services/ServiceFactory';
-import { IAppConfig, DEFAULT_APP_CONFIG } from '../models';
+import { createSharePointService, createConfigService, isLocalEnvironment } from '../services/ServiceFactory';
+import { resolveConfiguredSiteUrl } from '../services/SharePointService';
+import { IAppConfig, DEFAULT_APP_CONFIG, IConfigValidationResult } from '../models';
 
 export interface IServiceContextValue {
   service: ISharePointService;
   config: IAppConfig;
   loading: boolean;
   error: string | undefined;
+  /** Set when TravelHubConfig and/or one or more content lists aren't provisioned at the resolved site — undefined when everything checks out. Drives ConfigWarningBanner. */
+  configWarning: IConfigValidationResult | undefined;
   /** Re-reads TravelHubConfig and re-scopes the service if siteUrl changed — call after Settings saves. */
   refreshConfig: () => Promise<void>;
 }
@@ -29,7 +32,7 @@ const ServiceContext = React.createContext<IServiceContextValue | undefined>(und
  * or care whether siteUrl is overridden.
  */
 export const ServiceProvider: React.FC<{ context: WebPartContext; children: React.ReactNode }> = ({ context, children }) => {
-  const [state, setState] = React.useState<{ service: ISharePointService; config: IAppConfig } | undefined>(undefined);
+  const [state, setState] = React.useState<{ service: ISharePointService; config: IAppConfig; configWarning: IConfigValidationResult | undefined } | undefined>(undefined);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | undefined>(undefined);
 
@@ -39,13 +42,25 @@ export const ServiceProvider: React.FC<{ context: WebPartContext; children: Reac
     try {
       const bootstrapService = createSharePointService(context, DEFAULT_APP_CONFIG);
       const configService: ConfigService = createConfigService(bootstrapService);
-      const config = await configService.getConfig();
+      const { config, configListFound } = await configService.getConfig();
       const service = createSharePointService(context, config);
-      setState({ service, config });
+
+      // Local workbench runs entirely on mock data — nothing to validate.
+      // On a real site, check the content lists too so a first-run/mis-configured
+      // site surfaces exactly what's missing instead of quietly rendering blank
+      // sections everywhere.
+      const missingLists = isLocalEnvironment()
+        ? []
+        : await service.checkListsExist(Object.values(config.lists)).catch(() => []);
+      const configWarning: IConfigValidationResult | undefined = (!configListFound || missingLists.length > 0) && !isLocalEnvironment()
+        ? { siteUrl: resolveConfiguredSiteUrl(config, context), configListFound, missingLists }
+        : undefined;
+
+      setState({ service, config, configWarning });
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to load Travel Hub configuration.');
       // Still let the app render against defaults rather than a blank page.
-      setState({ service: createSharePointService(context, DEFAULT_APP_CONFIG), config: DEFAULT_APP_CONFIG });
+      setState({ service: createSharePointService(context, DEFAULT_APP_CONFIG), config: DEFAULT_APP_CONFIG, configWarning: undefined });
     } finally {
       setLoading(false);
     }
@@ -56,7 +71,7 @@ export const ServiceProvider: React.FC<{ context: WebPartContext; children: Reac
   }, [load]);
 
   const value: IServiceContextValue | undefined = state
-    ? { service: state.service, config: state.config, loading, error, refreshConfig: load }
+    ? { service: state.service, config: state.config, loading, error, configWarning: state.configWarning, refreshConfig: load }
     : undefined;
 
   if (!value) return null; // brief flash before first config load resolves

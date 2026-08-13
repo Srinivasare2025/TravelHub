@@ -63,6 +63,10 @@ export interface ISharePointService {
   getConfigRows(): Promise<Record<string, string>>;
   saveConfigRows(rows: Record<string, string>): Promise<void>;
 
+  // ---- Dependency validation (drives the ConfigWarningBanner) ----
+  /** Returns the subset of `listTitles` that do NOT exist at the resolved site — empty when all are provisioned. */
+  checkListsExist(listTitles: string[]): Promise<string[]>;
+
   // ---- Native SharePoint links (Settings page "open in SharePoint") ----
   getListWebRelativeUrl(listName: string): string;
 }
