@@ -1,0 +1,25 @@
+.heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 34px 0 14px;
+
+  h2 {
+    font-family: Georgia, 'Iowan Old Style', serif;
+    font-size: 19px;
+    font-weight: 600;
+    margin: 0;
+    color: var(--th-primary);
+  }
+
+  a {
+    font-size: 13px;
+    color: var(--th-primary);
+    text-decoration: none;
+    font-weight: 600;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

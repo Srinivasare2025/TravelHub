@@ -1,0 +1,395 @@
+.page {
+  padding-top: 0;
+}
+
+/*
+  Fix: the Important Update card used to be position:absolute over the hero
+  image, so on shorter hero heights it spilled into the section below.
+  Now it's a flex sibling of the hero text INSIDE the same row — the hero's
+  height is auto (driven by content, min-height only as a floor), so it
+  always grows to contain both, and nothing below can ever be overlapped.
+*/
+.hero {
+  position: relative;
+  border-radius: 0;
+  background-size: cover;
+  background-position: center;
+  background-color: var(--th-secondary);
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, rgba(2, 22, 39, 0.82) 0%, rgba(2, 22, 39, 0.5) 60%, rgba(2, 22, 39, 0.25) 100%);
+  }
+}
+.heroRow {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 28px;
+  padding: 40px 5%;
+  flex-wrap: wrap;
+}
+.heroText {
+  color: #fff;
+  max-width: 560px;
+  flex: 1 1 360px;
+
+  h1 {
+    font-family: Georgia, serif;
+    font-size: 32px;
+    margin: 0 0 10px;
+  }
+  p {
+    margin: 0 0 18px;
+    font-size: 14px;
+    opacity: 0.92;
+  }
+}
+.heroSearch {
+  position: relative;
+  max-width: 420px;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 10px;
+  padding: 0 14px;
+
+  input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 11px 10px;
+    font-size: 13.5px;
+    background: transparent;
+    cursor: pointer;
+  }
+  i {
+    color: var(--th-text-muted);
+  }
+}
+.updateCard {
+  flex: 0 0 280px;
+  background: rgba(2, 22, 39, 0.9);
+  color: #fff;
+  border-radius: 12px;
+  padding: 18px 20px;
+
+  h5 {
+    margin: 0 0 8px;
+    font-size: 13.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--th-primary);
+  }
+  p {
+    margin: 0 0 12px;
+    font-size: 12px;
+    line-height: 1.5;
+    opacity: 0.9;
+  }
+  button {
+    background: none;
+    border: none;
+    color: var(--th-primary);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0;
+  }
+}
+@media (max-width: 760px) {
+  .heroRow {
+    flex-direction: column;
+  }
+  .updateCard {
+    flex-basis: auto;
+    width: 100%;
+  }
+}
+
+.overlapCard {
+  position: relative;
+  z-index: 5;
+  margin: -34px 20px 0;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+  display: flex;
+  padding: 20px 26px;
+  gap: 26px;
+  flex-wrap: wrap;
+}
+.overlapSection {
+  flex: 1;
+  min-width: 240px;
+
+  & + & {
+    border-left: 1px solid var(--th-border);
+    padding-left: 26px;
+  }
+  h4 {
+    margin: 0 0 3px;
+    font-size: 14px;
+    color: var(--th-primary);
+  }
+  p {
+    margin: 0 0 12px;
+    font-size: 11.5px;
+    color: var(--th-text-muted);
+  }
+}
+.iconRow {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+}
+.iconLink {
+  text-align: center;
+  text-decoration: none;
+  color: var(--th-text);
+  cursor: pointer;
+
+  span:last-child {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 600;
+  }
+}
+.iconBadge {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  border: 1px solid var(--th-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 6px;
+  color: var(--th-primary);
+  font-size: 17px;
+}
+.iconLink:hover .iconBadge {
+  border-color: var(--th-primary);
+}
+
+/*
+  Fix: consistent 28px rhythm between every home-page section (previously an
+  empty hidden <h2> spacer plus mismatched ad-hoc margins left an odd gap
+  before the offer banner). Every direct section below uses this same value.
+*/
+.twoCol {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 20px;
+  margin-top: 28px;
+}
+@media (max-width: 860px) {
+  .twoCol {
+    grid-template-columns: 1fr;
+  }
+}
+.panel {
+  background: var(--th-card-bg);
+  border: 1px solid var(--th-border);
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+  padding: 18px 20px;
+}
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+
+  h3 {
+    margin: 0;
+    font-size: 15px;
+    color: var(--th-primary);
+    font-family: Georgia, serif;
+  }
+  a {
+    font-size: 12px;
+    color: var(--th-primary);
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+  }
+}
+.resourceMini {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+
+  a {
+    text-align: center;
+    text-decoration: none;
+    color: var(--th-text);
+    padding: 14px 8px;
+    border: 1px solid var(--th-border);
+    border-radius: 10px;
+    cursor: pointer;
+    display: block;
+
+    &:hover {
+      border-color: var(--th-primary);
+    }
+    i {
+      font-size: 20px;
+      color: var(--th-primary);
+      margin-bottom: 8px;
+      display: block;
+    }
+    strong {
+      display: block;
+      font-size: 12.5px;
+    }
+    span {
+      display: block;
+      font-size: 11px;
+      color: var(--th-text-muted);
+      margin-top: 2px;
+    }
+  }
+}
+.announceList {
+  display: flex;
+  flex-direction: column;
+}
+.announceItem {
+  display: flex;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--th-border);
+
+  &:last-child {
+    border-bottom: none;
+  }
+  h5 {
+    margin: 0 0 3px;
+    font-size: 12.5px;
+  }
+  p {
+    margin: 0;
+    font-size: 11.5px;
+    color: var(--th-text-muted);
+  }
+  a {
+    font-size: 11px;
+    color: var(--th-primary);
+    text-decoration: none;
+    font-weight: 700;
+    cursor: pointer;
+  }
+}
+.announceIcon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--th-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 13px;
+}
+
+.offerBanner {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  margin-top: 28px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(2, 22, 39, 0.9) 20%, rgba(2, 22, 39, 0.3) 100%);
+  }
+}
+.offerContent {
+  position: relative;
+  z-index: 2;
+  padding: 24px 32px;
+  max-width: 460px;
+
+  h3 {
+    font-family: Georgia, serif;
+    font-size: 21px;
+    margin: 0 0 6px;
+  }
+  p {
+    margin: 0 0 14px;
+    font-size: 13px;
+    opacity: 0.88;
+  }
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--th-primary);
+    color: var(--th-secondary);
+    border: none;
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+  }
+}
+
+.actionChips {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 24px;
+    border: 1px solid var(--th-border);
+    background: #fff;
+    text-decoration: none;
+    color: var(--th-text);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover {
+      border-color: var(--th-primary);
+      color: var(--th-primary);
+    }
+    i {
+      color: var(--th-primary);
+    }
+  }
+}
+
+.cardGridSingle {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+.empty {
+  color: var(--th-text-muted);
+  font-size: 12.5px;
+  text-align: center;
+  padding: 20px 0;
+}
