@@ -1,6 +1,12 @@
 import { ISharePointService } from './ISharePointService';
 import { IAppConfig, DEFAULT_APP_CONFIG, DEFAULT_LIST_NAMES, DEFAULT_GROUP_NAMES, ThemeKey } from '../models';
 
+/** getConfig()'s result, plus whether TravelHubConfig itself was actually found — see ServiceContext's configWarning. */
+export interface IConfigLoadResult {
+  config: IAppConfig;
+  configListFound: boolean;
+}
+
 /**
  * Converts the flat key/value rows stored in the TravelHubConfig list into a
  * typed IAppConfig (and back). This is the "provision for admin to
@@ -10,17 +16,20 @@ import { IAppConfig, DEFAULT_APP_CONFIG, DEFAULT_LIST_NAMES, DEFAULT_GROUP_NAMES
 export class ConfigService {
   constructor(private sharePointService: ISharePointService) {}
 
-  public async getConfig(): Promise<IAppConfig> {
+  public async getConfig(): Promise<IConfigLoadResult> {
     let rows: Record<string, string> = {};
+    let configListFound = true;
     try {
       rows = await this.sharePointService.getConfigRows();
     } catch {
       // TravelHubConfig list not provisioned yet (or no access) — fall back to defaults
-      // so the app is still usable with the standard list names.
+      // so the app is still usable with the standard list names. Reported back via
+      // configListFound so the UI can tell the admin instead of failing silently.
+      configListFound = false;
       rows = {};
     }
 
-    return {
+    const config: IAppConfig = {
       siteUrl: rows.siteUrl ?? DEFAULT_APP_CONFIG.siteUrl,
       lists: {
         policies: rows.list_policies ?? DEFAULT_LIST_NAMES.policies,
@@ -42,6 +51,7 @@ export class ConfigService {
       defaultTheme: (rows.defaultTheme as ThemeKey) ?? DEFAULT_APP_CONFIG.defaultTheme,
       organizationName: rows.organizationName ?? DEFAULT_APP_CONFIG.organizationName
     };
+    return { config, configListFound };
   }
 
   public async saveConfig(config: IAppConfig): Promise<void> {

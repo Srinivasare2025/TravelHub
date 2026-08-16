@@ -65,3 +65,21 @@ export const DEFAULT_APP_CONFIG: IAppConfig = {
   defaultTheme: 'goldNavy',
   organizationName: 'Travel Hub'
 };
+
+/**
+ * Result of checking, at app load, whether the SharePoint dependencies this
+ * app needs (the `TravelHubConfig` list itself, plus the content lists it
+ * points at) actually exist at the resolved site. `undefined` everywhere
+ * this is used means "fully provisioned, nothing to warn about" — see
+ * ServiceContext, which computes this once and shares it via ConfigWarningBanner
+ * so a first-run/mis-configured site tells the admin exactly what to fix
+ * instead of silently rendering blank sections.
+ */
+export interface IConfigValidationResult {
+  /** The site the app actually resolved to use (config.siteUrl if set, else the current site). */
+  siteUrl: string;
+  /** False when the TravelHubConfig list wasn't found at siteUrl — defaults are being used instead. */
+  configListFound: boolean;
+  /** Content list titles (from config.lists) that don't exist at siteUrl. Empty when fully provisioned. */
+  missingLists: string[];
+}

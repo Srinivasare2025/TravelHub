@@ -223,4 +223,8 @@ export class MockSharePointService implements ISharePointService {
   public getListWebRelativeUrl(listName: string): string {
     return `#/admin/${listName}`;
   }
+
+  public async checkListsExist(_listTitles: string[]): Promise<string[]> {
+    return []; // the local workbench has no real SharePoint dependencies to validate
+  }
 }

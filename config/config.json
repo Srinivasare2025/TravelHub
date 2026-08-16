@@ -21,7 +21,7 @@
   },
   "externals": {},
   "localizedResources": {
-    "travelHubWebPartStrings": "lib/webparts/travelHub/loc/{locale}.js",
-    "travelHubAdminWebPartStrings": "lib/webparts/travelHubAdmin/loc/{locale}.js"
+    "TravelHubWebPartStrings": "lib/webparts/travelHub/loc/{locale}.js",
+    "TravelHubAdminWebPartStrings": "lib/webparts/travelHubAdmin/loc/{locale}.js"
   }
 }

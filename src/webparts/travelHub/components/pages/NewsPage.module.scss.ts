@@ -1,0 +1,45 @@
+/* tslint:disable */
+require("./NewsPage.module.css");
+const styles = {
+  title: 'title_3b275bb7',
+  sub: 'sub_3b275bb7',
+  sectionTitle: 'sectionTitle_3b275bb7',
+  panel: 'panel_3b275bb7',
+  tileGrid: 'tileGrid_3b275bb7',
+  tile: 'tile_3b275bb7',
+  tileBig: 'tileBig_3b275bb7',
+  tileIcon: 'tileIcon_3b275bb7',
+  tileIconBig: 'tileIconBig_3b275bb7',
+  tableWrap: 'tableWrap_3b275bb7',
+  table: 'table_3b275bb7',
+  rowTitle: 'rowTitle_3b275bb7',
+  tableEmpty: 'tableEmpty_3b275bb7',
+  tableFooter: 'tableFooter_3b275bb7',
+  sidebarLayout: 'sidebarLayout_3b275bb7',
+  sidebarFilter: 'sidebarFilter_3b275bb7',
+  filterHeading: 'filterHeading_3b275bb7',
+  filterActive: 'filterActive_3b275bb7',
+  filterBar: 'filterBar_3b275bb7',
+  viewToggle: 'viewToggle_3b275bb7',
+  toggleActive: 'toggleActive_3b275bb7',
+  faqTabs: 'faqTabs_3b275bb7',
+  faqTab: 'faqTab_3b275bb7',
+  faqTabActive: 'faqTabActive_3b275bb7',
+  faqItem: 'faqItem_3b275bb7',
+  faqQuestion: 'faqQuestion_3b275bb7',
+  faqAnswer: 'faqAnswer_3b275bb7',
+  searchWrap: 'searchWrap_3b275bb7',
+  pageHeaderRow: 'pageHeaderRow_3b275bb7',
+  feature: 'feature_3b275bb7',
+  featureThumb: 'featureThumb_3b275bb7',
+  featureBody: 'featureBody_3b275bb7',
+  pill: 'pill_3b275bb7',
+  date: 'date_3b275bb7',
+  list: 'list_3b275bb7',
+  listItem: 'listItem_3b275bb7',
+  listThumb: 'listThumb_3b275bb7',
+  empty: 'empty_3b275bb7'
+};
+
+export default styles;
+/* tslint:enable */

@@ -4,7 +4,7 @@ import { initializeIcons } from '@fluentui/react';
 import { ServiceProvider, useServiceContext } from '../../../../state/ServiceContext';
 import { ThemeContextProvider } from '../../../../state/ThemeContext';
 import { UserContextProvider, useUserContext } from '../../../../state/UserContext';
-import { ThemedRoot, LoadingSpinner, EmptyState, useToasts, ToastHost } from '../../../../shared/components';
+import { ThemedRoot, LoadingSpinner, EmptyState, useToasts, ToastHost, ConfigWarningBanner } from '../../../../shared/components';
 import { Sidebar, NAV_ORDER } from '../AdminShell/Sidebar';
 import { SectionsPage, SECTIONS } from '../sections';
 import { DashboardPage, ApprovalsPage, AnalyticsPage, MediaLibraryPage, SettingsPage, UsersPermissionsPage } from '../pages';
@@ -19,7 +19,7 @@ export interface IAdminAppProps {
 
 const AdminShell: React.FC = () => {
   const { isAdmin, isContributor, loading: userLoading } = useUserContext();
-  const { loading: configLoading, error: configError } = useServiceContext();
+  const { loading: configLoading, error: configError, configWarning } = useServiceContext();
   const [active, setActive] = React.useState('dashboard');
   const [toasts, showToast] = useToasts();
 
@@ -49,6 +49,11 @@ const AdminShell: React.FC = () => {
     <ThemedRoot className={styles.root}>
       {configError && (
         <div className={styles.configWarning}>Configuration couldn&rsquo;t be fully loaded ({configError}) — showing defaults.</div>
+      )}
+      {configWarning && (
+        <div style={{ marginBottom: 14 }}>
+          <ConfigWarningBanner configWarning={configWarning} onGoToSettings={() => setActive('settings')} />
+        </div>
       )}
       <div className={styles.layout}>
         <Sidebar active={active} roleLabel={isAdmin ? 'Admin' : 'Contributor'} onSelect={setActive} />

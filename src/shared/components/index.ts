@@ -7,3 +7,4 @@ export * from './ThemedRoot';
 export * from './ThemePicker';
 export * from './ContentCard';
 export * from './Toast';
+export * from './ConfigWarningBanner';

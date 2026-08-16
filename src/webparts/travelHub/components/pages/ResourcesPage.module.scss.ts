@@ -1,0 +1,46 @@
+/* tslint:disable */
+require("./ResourcesPage.module.css");
+const styles = {
+  title: 'title_da32d099',
+  sub: 'sub_da32d099',
+  sectionTitle: 'sectionTitle_da32d099',
+  panel: 'panel_da32d099',
+  tileGrid: 'tileGrid_da32d099',
+  tile: 'tile_da32d099',
+  tileBig: 'tileBig_da32d099',
+  tileIcon: 'tileIcon_da32d099',
+  tileIconBig: 'tileIconBig_da32d099',
+  tableWrap: 'tableWrap_da32d099',
+  table: 'table_da32d099',
+  rowTitle: 'rowTitle_da32d099',
+  tableEmpty: 'tableEmpty_da32d099',
+  tableFooter: 'tableFooter_da32d099',
+  sidebarLayout: 'sidebarLayout_da32d099',
+  sidebarFilter: 'sidebarFilter_da32d099',
+  filterHeading: 'filterHeading_da32d099',
+  filterActive: 'filterActive_da32d099',
+  filterBar: 'filterBar_da32d099',
+  viewToggle: 'viewToggle_da32d099',
+  toggleActive: 'toggleActive_da32d099',
+  faqTabs: 'faqTabs_da32d099',
+  faqTab: 'faqTab_da32d099',
+  faqTabActive: 'faqTabActive_da32d099',
+  faqItem: 'faqItem_da32d099',
+  faqQuestion: 'faqQuestion_da32d099',
+  faqAnswer: 'faqAnswer_da32d099',
+  searchWrap: 'searchWrap_da32d099',
+  pageHeaderRow: 'pageHeaderRow_da32d099',
+  cardGrid: 'cardGrid_da32d099',
+  card: 'card_da32d099',
+  cardMeta: 'cardMeta_da32d099',
+  pill: 'pill_da32d099',
+  resourceList: 'resourceList_da32d099',
+  resourceRow: 'resourceRow_da32d099',
+  rowIcon: 'rowIcon_da32d099',
+  rowBody: 'rowBody_da32d099',
+  rowMeta: 'rowMeta_da32d099',
+  empty: 'empty_da32d099'
+};
+
+export default styles;
+/* tslint:enable */
