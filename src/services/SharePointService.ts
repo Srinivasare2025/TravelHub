@@ -85,7 +85,10 @@ export class SharePointService implements ISharePointService {
   // ---- Public read paths --------------------------------------------------
 
   public async getActivePromotions(top = 6): Promise<IPromotion[]> {
-    const today = new Date().toISOString().split('T')[0];
+    // Must be a full ISO datetime, not just the date portion — SharePoint's
+    // REST OData parser rejects a bare `datetime'yyyy-MM-dd'` literal (400),
+    // which was silently emptying this list on every call regardless of data.
+    const today = new Date().toISOString();
     return this.sp.web.lists.getByTitle(this.config.lists.promotions).items
       .filter(`IsActive eq 1 and EndDate ge datetime${odataString(today)}`)
       .orderBy('Priority', true)

@@ -286,9 +286,11 @@
 
 .searchWrap {
   position: relative;
+  width: 100%;
   max-width: 280px;
 
   input {
+    box-sizing: border-box;
     width: 100%;
     padding: 9px 36px 9px 12px;
     border-radius: 8px;

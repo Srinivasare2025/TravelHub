@@ -22,25 +22,23 @@ export const HomePage: React.FC = () => {
   React.useEffect(() => {
     let cancelled = false;
     setLoading(true);
+    // Each call gets its own fallback instead of sharing one Promise.all —
+    // a Promise.all rejects as soon as ANY of its promises rejects, which was
+    // wiping out sections (e.g. quick links) that had already loaded fine
+    // just because a sibling list (e.g. news/promotions) failed or isn't
+    // provisioned yet. A list not being provisioned still surfaces via the
+    // ConfigWarningBanner (see Layout); here we just fail soft per-section.
     Promise.all([
-      service.getActivePromotions(6),
-      service.getFeaturedNews(6),
-      service.getQuickLinks(),
-      service.getRecentNotifications()
+      service.getActivePromotions(6).catch(() => []),
+      service.getFeaturedNews(6).catch(() => []),
+      service.getQuickLinks().catch(() => []),
+      service.getRecentNotifications().catch(() => [])
     ]).then(([promos, newsItems, links, notifs]) => {
       if (cancelled) return;
       setPromotions(promos);
       setNews(newsItems);
       setQuickLinks(links);
       setNotifications(notifs);
-    }).catch(() => {
-      // A list not being provisioned yet surfaces via ConfigWarningBanner (see Layout) —
-      // here we just fail soft to empty sections instead of an unhandled rejection.
-      if (cancelled) return;
-      setPromotions([]);
-      setNews([]);
-      setQuickLinks([]);
-      setNotifications([]);
     }).finally(() => { if (!cancelled) setLoading(false); });
     service.logEvent('PageView', '/home').catch(() => { /* non-fatal */ });
     return () => { cancelled = true; };
